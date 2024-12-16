@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from django.db import models
 
 class Organisation(models.Model):
@@ -32,6 +33,16 @@ class User(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
     vote_events = models.ManyToManyField(VoteEvent)
     password = models.CharField(max_length=255)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name']
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def is_authenticated(self):
+        True
+
 
     def __str__(self):
         return f'{self.first_name}, {self.last_name}'

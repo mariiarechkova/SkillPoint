@@ -1,12 +1,13 @@
 from django.utils.timezone import now
 from rest_framework import generics, status
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, AuthenticationFailed
 from django.contrib.auth.models import User
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from .models import *
+from django.contrib.auth.hashers import check_password
 from .serializers import *
+from .utils import generate_jwt
 
 
 class DepartmentListCreate(APIView):
@@ -31,12 +32,17 @@ class DepartmentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
 
-class UserListCreate(APIView):
-    def get(self, request, *args, **kwargs):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class RegistrationView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         user_data = {key: value for key, value in request.data.items()}
         user_data['organisation'] = 1
@@ -48,6 +54,26 @@ class UserListCreate(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise AuthenticationFailed("User not found")
+
+        pwd_valid = check_password(password, user.password)
+        # user = authenticate(email=email, password=password)
+        if not pwd_valid:
+            raise AuthenticationFailed("Invalid credentials")
+
+        token = generate_jwt(user)
+        return Response({"token": token})
+
+class ProtectedView(APIView):
+    def get(self, request):
+        return Response({"message": "You are authenticated", "user": str(request.user)})
