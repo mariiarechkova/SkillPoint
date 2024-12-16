@@ -77,3 +77,10 @@ class LoginView(APIView):
 class ProtectedView(APIView):
     def get(self, request):
         return Response({"message": "You are authenticated", "user": str(request.user)})
+
+class AvailibleUsers(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        current_user = self.request.user
+        return User.objects.exclude(id=current_user.id)

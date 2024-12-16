@@ -12,7 +12,6 @@ class JWTAuthentication(BaseAuthentication):
 
         if not auth_header:
             return None
-        print(f"Authorization Header: {auth_header}")
 
         try:
             prefix, token = auth_header.split(' ')
