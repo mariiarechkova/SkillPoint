@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import DepartmentListCreate, DepartmentDetail, UserDetail, LoginView, ProtectedView, \
-    UserList, RegistrationView
+    UserList, RegistrationView, AvailibleUsers
 
 urlpatterns = [
     path('departments/', DepartmentListCreate.as_view(), name='department-list'),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('registration/', RegistrationView.as_view(), name='registration'),
     path('login/', LoginView.as_view(), name='login'),
     path('protected/', ProtectedView.as_view(), name='protected'),
+    path('users/available-to-vote/', AvailibleUsers.as_view(), name='available-to-vote')
 ]

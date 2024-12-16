@@ -7,6 +7,7 @@ class OrganisationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organisation
         fields = '__all__'
+
 class DepartmentSerializer(serializers.ModelSerializer):
     created = serializers.DateTimeField(source='created_at', format="%Y-%m-%d")
     organisation = organisation_field
