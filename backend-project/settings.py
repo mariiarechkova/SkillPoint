@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import secrets
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,21 +41,22 @@ INSTALLED_APPS = [
     'django_extensions',
     'skillpoint_api',
     'rest_framework',
-    'rest_framework.authtoken',
-
+    'rest_framework.authtoken'
 ]
 
 REST_FRAMEWORK = {
-    # "DEFAULT_PERMISSION_CLASSES": [
-    #     "rest_framework.permissions.IsAuthenticated",
-    # ],
-    #
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     'rest_framework.authentication.SessionAuthentication',
-    #     "rest_framework.authentication.TokenAuthentication",
-    #     'rest_framework.authentication.BasicAuthentication',
-    # ),
+     'DEFAULT_AUTHENTICATION_CLASSES': [
+         'skillpoint_api.authentication.JWTAuthentication',
+     ],
+     'DEFAULT_PERMISSION_CLASSES': [
+         'rest_framework.permissions.IsAuthenticated',
+     ],
 }
+
+JWT_SECRET_KEY = 'yYzxT2nFxibq-_c298p_mzzE5YszDw_qMi9eSCCizSM'
+JWT_ALGORITHM = 'HS256'
+JWT_EXPIRATION_DELTA = timedelta(days=7)
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
