@@ -62,7 +62,7 @@ class Profile(models.Model):
     job_title = models.CharField(max_length=100, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     salary = models.CharField(max_length=20, null=True, blank=True)
-    start_work_at = models.DateTimeField(auto_now_add=True)
+    start_work_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
