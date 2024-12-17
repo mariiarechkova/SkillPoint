@@ -31,7 +31,6 @@ class User(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
-    vote_events = models.ManyToManyField(VoteEvent)
     password = models.CharField(max_length=255)
 
     USERNAME_FIELD = 'email'
@@ -53,7 +52,8 @@ class VoteDetails(models.Model):
     comment = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     vote_event = models.OneToOneField(VoteEvent, on_delete=models.CASCADE)
-    evaluated_employee = models.ForeignKey(User, on_delete=models.CASCADE)
+    rated_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rated_user')
+    judge = models.ForeignKey(User, on_delete=models.CASCADE, related_name='judge')
 
 
 class Profile(models.Model):
