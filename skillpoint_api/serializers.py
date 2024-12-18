@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from skillpoint_api.models import *
 
-organisation_field = serializers.PrimaryKeyRelatedField(queryset=Organisation.objects.all())
 
 class OrganisationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,22 +9,25 @@ class OrganisationSerializer(serializers.ModelSerializer):
 
 class DepartmentSerializer(serializers.ModelSerializer):
     created = serializers.DateTimeField(source='created_at', format="%Y-%m-%d")
-    organisation = organisation_field
+
     class Meta:
         model = Department
         fields = ['id', 'title', 'organisation', 'created']
         read_only_fields = ['created']
 
 class VoteEventSerializer(serializers.ModelSerializer):
+    organisation = serializers.PrimaryKeyRelatedField(
+        queryset=Organisation.objects.all(),
+        write_only=True
+    )
     class Meta:
         model = VoteEvent
-        fields = '__all__'
+        fields = ['frequency', 'start_day', 'end_day', 'created_at', 'organisation']
 
 class UserSerializer(serializers.ModelSerializer):
     created = serializers.DateTimeField(source='created_at', format="%Y-%m-%d")
     password = serializers.CharField(write_only=True)
 
-    organisation = organisation_field
 
     class Meta:
         model = User
