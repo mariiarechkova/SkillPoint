@@ -1,4 +1,5 @@
 from django.contrib.auth.hashers import make_password
+from django.utils.translation import gettext_lazy as _
 from django.db import models
 
 class Organisation(models.Model):
@@ -12,24 +13,31 @@ class Organisation(models.Model):
 class Department(models.Model):
     title = models.CharField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
+    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE, default=1)
 
 
     def __str__(self):
         return self.title
 
 class VoteEvent(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
+    class Frequency(models.TextChoices):
+        WEEK = 'week', _('Week')
+        MONTH = 'month', _('Month')
+        QUARTER = 'quarter', _('Quarter')
+        YEAR = 'year', _('Year')
+
+    frequency = models.CharField(max_length=10, choices=Frequency.choices, default=Frequency.MONTH)
+    start_day = models.IntegerField(default=1, blank=True)
+    end_day = models.IntegerField(default=15, blank=True)
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
-
-
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class User(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
+    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE, default=1)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
     password = models.CharField(max_length=255)
 
@@ -48,7 +56,7 @@ class User(models.Model):
 
 
 class VoteDetails(models.Model):
-    estimation = models.IntegerField()
+    estimation = models.FloatField()
     comment = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     vote_event = models.OneToOneField(VoteEvent, on_delete=models.CASCADE)
