@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'skillpoint_api',
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'django_filters',
 ]
 
 REST_FRAMEWORK = {
@@ -51,6 +52,7 @@ REST_FRAMEWORK = {
      'DEFAULT_PERMISSION_CLASSES': [
          'rest_framework.permissions.IsAuthenticated',
      ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 JWT_SECRET_KEY = 'yYzxT2nFxibq-_c298p_mzzE5YszDw_qMi9eSCCizSM'

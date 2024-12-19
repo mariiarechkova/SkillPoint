@@ -1,4 +1,5 @@
 from django.utils.timezone import now
+from rest_framework import filters
 from rest_framework import generics, status
 from rest_framework.exceptions import NotFound, AuthenticationFailed
 from django.contrib.auth.models import User
@@ -38,6 +39,9 @@ class DepartmentDetail(generics.RetrieveUpdateDestroyAPIView):
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['first_name', 'last_name']
+
 
 class UserDetailView(APIView):
 
