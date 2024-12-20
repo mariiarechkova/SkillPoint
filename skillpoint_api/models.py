@@ -59,7 +59,7 @@ class VoteDetails(models.Model):
     estimation = models.FloatField()
     comment = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    vote_event = models.OneToOneField(VoteEvent, on_delete=models.CASCADE)
+    vote_event = models.ForeignKey(VoteEvent, on_delete=models.CASCADE, related_name='vote_event')
     rated_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rated_user')
     judge = models.ForeignKey(User, on_delete=models.CASCADE, related_name='judge')
 

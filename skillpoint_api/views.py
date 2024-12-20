@@ -186,3 +186,24 @@ class VoteEventsView(APIView):
         vote_event = self.get_object(pk)
         vote_event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class VoteDetailsView(APIView):
+    def post(self, request, pk, format=None):
+        current_user = self.request.user
+        vote_details_data = request.data
+
+        if isinstance(vote_details_data, list):
+            for detail in vote_details_data:
+                detail['judge'] = current_user.id
+                detail['vote_event'] = pk
+
+            serializer = VoteDetailsSerializer(data=vote_details_data, many=True)
+
+        else:
+            return Response({"error": "Details should be a list of objects."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
