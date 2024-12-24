@@ -19,8 +19,6 @@ class UserDetailView(APIView):
             user = User.objects.get(pk=pk)
             user_data = UserSerializer(user).data
 
-            user_data.pop('organisation', None)
-
             try:
                 profile = Profile.objects.get(user=user)
                 profile_data = ProfileSerializer(profile).data

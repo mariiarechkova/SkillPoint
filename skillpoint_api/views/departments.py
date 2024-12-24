@@ -1,4 +1,3 @@
-from django.utils.timezone import now
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
@@ -10,16 +9,12 @@ class DepartmentListCreate(APIView):
     def get(self, request, *args, **kwargs):
         departments = Department.objects.all()
         serializer = DepartmentSerializer(departments, many=True)
-
-        for department in serializer.data:
-            department.pop('organisation', None)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        department_data = {
-            'title': request.data.get("title"),
-            'created': now()
-        }
+        current_user = self.request.user
+        department_data = request.data
+        department_data['organisation'] = current_user.organisation_id
         serializer = DepartmentSerializer(data=department_data)
         if serializer.is_valid():
             serializer.save()

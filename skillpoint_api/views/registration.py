@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from django.utils.timezone import now
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.models import User
@@ -14,8 +13,6 @@ class RegistrationView(APIView):
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         user_data = {key: value for key, value in request.data.items()}
-        user_data['created'] = now()
-
         serializer = UserSerializer(data=user_data)
 
         if serializer.is_valid():
