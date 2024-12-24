@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import DepartmentListCreate, DepartmentDetail, LoginView, ProtectedView, \
-    UserList, RegistrationView, AvailibleUsers, ProfileView, UserDetailView, VoteEventsView, VoteDetailsView
+from skillpoint_api.views.departments import *
+from skillpoint_api.views.users import *
+from skillpoint_api.views.registration import *
+from skillpoint_api.views.vote_events import *
 
 urlpatterns = [
     path('departments/', DepartmentListCreate.as_view(), name='departments-list'),
