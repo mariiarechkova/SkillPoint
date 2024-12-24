@@ -13,8 +13,18 @@ from ..utils import generate_jwt
 class RegistrationView(APIView):
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
-        user_data = {key: value for key, value in request.data.items()}
+        vote_event_id = request.query_params.get('vote_event_id')
+        if not vote_event_id:
+            return Response(
+                {"error": "vote_event_id is required as a query parameter"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        vote_event = get_object_or_404(VoteEvent, id=vote_event_id)
+
+        user_data = request.data.copy()
         user_data['created'] = now()
+        user_data['organisation'] = vote_event.organisation_id
 
         serializer = UserSerializer(data=user_data)
 
