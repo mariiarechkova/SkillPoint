@@ -1,5 +1,6 @@
 from django.urls import path
 from skillpoint_api.views.departments import *
+from skillpoint_api.views.metrics import MetricsView
 from skillpoint_api.views.organisations import OrganisationsView
 from skillpoint_api.views.users import *
 from skillpoint_api.views.registration import *
@@ -19,4 +20,5 @@ urlpatterns = [
     path('vote-events/', VoteEventsView.as_view(), name='vote-events-list'),
     path('vote-events/<int:pk>/', VoteEventsView.as_view(), name='vote-events-list'),
     path('vote-events/<int:pk>/details/', VoteDetailsView.as_view(), name='vote-details'),
+    path('metrics/staff/', MetricsView.as_view(), name='metrics-staff'),
 ]

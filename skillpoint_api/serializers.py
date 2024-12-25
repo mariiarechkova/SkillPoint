@@ -70,3 +70,12 @@ class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
         fields = '__all__'
+
+class MetricsSerializer(serializers.ModelSerializer):
+    department = DepartmentSerializer()
+    image = serializers.CharField(source='profile.image', read_only=True)
+    scale_interpretation = serializers.CharField(default='<1')
+    average_rating = serializers.FloatField()
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'image', 'scale_interpretation', 'average_rating', 'department']
