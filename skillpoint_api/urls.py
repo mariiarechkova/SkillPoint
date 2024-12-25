@@ -1,10 +1,12 @@
 from django.urls import path
 from skillpoint_api.views.departments import *
+from skillpoint_api.views.organisations import OrganisationsView
 from skillpoint_api.views.users import *
 from skillpoint_api.views.registration import *
 from skillpoint_api.views.vote_events import *
 
 urlpatterns = [
+    path('organisations/', OrganisationsView.as_view(), name='organisations-list'),
     path('departments/', DepartmentListCreate.as_view(), name='departments-list'),
     path('departments/<int:pk>/', DepartmentDetail.as_view(), name='department-detail'),
     path('users/', UserList.as_view(), name='users-list'),

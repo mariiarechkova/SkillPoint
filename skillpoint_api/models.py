@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 
 class Organisation(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -13,7 +13,7 @@ class Organisation(models.Model):
 class Department(models.Model):
     title = models.CharField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE, default=1)
+    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
 
 
     def __str__(self):
@@ -37,7 +37,7 @@ class User(models.Model):
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE, default=1)
+    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
     password = models.CharField(max_length=255)
 

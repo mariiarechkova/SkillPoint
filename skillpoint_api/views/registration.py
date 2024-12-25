@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from django.utils.timezone import now
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.models import User
@@ -23,7 +22,6 @@ class RegistrationView(APIView):
         vote_event = get_object_or_404(VoteEvent, id=vote_event_id)
 
         user_data = request.data.copy()
-        user_data['created'] = now()
         user_data['organisation'] = vote_event.organisation_id
 
         serializer = UserSerializer(data=user_data)
