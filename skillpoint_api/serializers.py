@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from rest_framework import serializers
 from skillpoint_api.models import *
 
@@ -71,7 +72,7 @@ class PermissionSerializer(serializers.ModelSerializer):
         model = Permission
         fields = '__all__'
 
-class MetricsSerializer(serializers.ModelSerializer):
+class MetricsStaffSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer()
     image = serializers.CharField(source='profile.image', read_only=True)
     scale_interpretation = serializers.CharField(default='<1')
@@ -79,3 +80,29 @@ class MetricsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'image', 'scale_interpretation', 'average_rating', 'department']
+
+
+class MetricsVoteSerializer(serializers.ModelSerializer):
+    evaluation_reports = serializers.SerializerMethodField()
+    total = serializers.SerializerMethodField()
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'evaluation_reports', 'total']
+
+    def get_evaluation_reports(self, user):
+        vote_details = VoteDetails.objects.filter(rated_user=user).select_related('judge')
+        return [
+            {
+                'estimation': vote.estimation,
+                'judge_user': {
+                    'id': vote.judge.id,
+                    'first_name': vote.judge.first_name,
+                    'last_name': vote.judge.last_name
+                }
+            }
+            for vote in vote_details
+        ]
+    def get_total(self,user):
+        vote_details = VoteDetails.objects.filter(rated_user=user)
+        return round(vote_details.aggregate(total=Sum('estimation'))['total'] or 0, 2)
+

@@ -4,10 +4,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from skillpoint_api.models import User, VoteDetails
-from skillpoint_api.serializers import MetricsSerializer
+from skillpoint_api.serializers import MetricsStaffSerializer, MetricsVoteSerializer
 
 
-class MetricsView(APIView):
+class MetricsStaffView(APIView):
     def get(self, request, *args, **kwargs):
         users = User.objects.filter(organisation=self.request.user.organisation)
 
@@ -17,5 +17,11 @@ class MetricsView(APIView):
                 average=Avg('estimation'))['average'] or 0
             user.average_rating = round(average_rating, 2)
 
-        serializer = MetricsSerializer(users, many=True)
+        serializer = MetricsStaffSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class MetricsVoteView(APIView):
+    def get(self, request, *args, **kwargs):
+        users = User.objects.filter(organisation=self.request.user.organisation)
+        serializer = MetricsVoteSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
