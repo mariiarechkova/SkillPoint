@@ -65,7 +65,7 @@ class VoteDetails(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     image = models.CharField(null=True, blank=True)
     job_title = models.CharField(max_length=100, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
