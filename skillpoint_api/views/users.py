@@ -11,6 +11,11 @@ class UserList(generics.ListAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['first_name', 'last_name']
 
+    def get_queryset(self):
+        current_org = self.request.user.organisation
+
+        return User.objects.filter(organisation=current_org)
+
 
 class UserDetailView(APIView):
 
