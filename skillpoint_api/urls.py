@@ -6,6 +6,8 @@ from skillpoint_api.views.users import *
 from skillpoint_api.views.registration import *
 from skillpoint_api.views.vote_events import *
 
+
+
 urlpatterns = [
     path('organisations/', OrganisationsView.as_view(), name='organisations-list'),
     path('departments/', DepartmentListCreate.as_view(), name='departments-list'),
