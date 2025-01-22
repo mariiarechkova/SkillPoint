@@ -1,4 +1,4 @@
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 
@@ -32,24 +32,19 @@ class VoteEvent(models.Model):
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
-class User(models.Model):
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=50)
+class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
-    password = models.CharField(max_length=255)
+    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE, related_name='users')
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True, related_name='users')
+    username = None
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
-    def set_password(self, raw_password):
-        self.password = make_password(raw_password)
-
-    def is_authenticated(self):
-        True
-
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['email'], name='unique_email')
+        ]
 
     def __str__(self):
         return f'{self.first_name}, {self.last_name}'

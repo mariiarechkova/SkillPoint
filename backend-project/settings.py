@@ -13,6 +13,7 @@ import secrets
 from datetime import timedelta
 from pathlib import Path
 from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,7 +28,7 @@ SECRET_KEY = 'django-insecure-w2=&dpd8yz1yj(772792ysvhbhn-ve&mw!!58xwv1evkwm)vfk
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'skillpoint_api.User'
 
 # Application definition
 
