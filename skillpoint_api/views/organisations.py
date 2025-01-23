@@ -28,6 +28,7 @@ class OrganisationsView(APIView):
 
                 user_data = request.data.copy()
                 user_data['organisation'] = created_organisation.id
+                user_data['is_staff'] = True
                 user_serializer = UserSerializer(data=user_data)
 
                 if user_serializer.is_valid():

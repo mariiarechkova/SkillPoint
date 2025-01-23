@@ -35,11 +35,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'organisation', 'password', 'department']
+        fields = ['id', 'first_name', 'last_name', 'email', 'organisation', 'password', 'department', 'is_staff']
         read_only_fields = ['vote_events']
 
     def create(self, validated_data):
-        print(self)
         password = validated_data.pop('password')
         user = User.objects.create(**validated_data)
         user.set_password(password)
