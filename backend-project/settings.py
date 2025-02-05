@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-w2=&dpd8yz1yj(772792ysvhbhn-ve&mw!!58xwv1evkwm)vfk
 DEBUG = True
 
 ALLOWED_HOSTS = []
-AUTH_USER_MODEL = 'skillpoint_api.User'
+AUTH_USER_MODEL = 'users.User'
 
 # Application definition
 
@@ -40,15 +40,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'skillpoint_api',
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
+    'organisations',
+    'users',
+    'voting',
 ]
 
 REST_FRAMEWORK = {
      'DEFAULT_AUTHENTICATION_CLASSES': [
-         'skillpoint_api.authentication.JWTAuthentication',
+         'users.authentication.JWTAuthentication',
      ],
      'DEFAULT_PERMISSION_CLASSES': [
          'rest_framework.permissions.IsAuthenticated',
