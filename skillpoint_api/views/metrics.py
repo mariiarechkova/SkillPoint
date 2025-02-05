@@ -1,5 +1,6 @@
 from django.db.models import Avg
 from rest_framework import status
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -8,6 +9,8 @@ from skillpoint_api.serializers import MetricsStaffSerializer, MetricsVoteSerial
 
 
 class MetricsStaffView(APIView):
+    permission_classes = [IsAdminUser]
+
     def get(self, request, *args, **kwargs):
         users = User.objects.filter(organisation=self.request.user.organisation)
 
@@ -21,6 +24,8 @@ class MetricsStaffView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class MetricsVoteView(APIView):
+    permission_classes = [IsAdminUser]
+
     def get(self, request, *args, **kwargs):
         users = User.objects.filter(organisation=self.request.user.organisation)
         serializer = MetricsVoteSerializer(users, many=True)

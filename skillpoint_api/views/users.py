@@ -1,4 +1,5 @@
 from rest_framework import generics, filters
+from rest_framework.permissions import IsAdminUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from ..models import Profile, User
@@ -6,7 +7,8 @@ from ..serializers import UserSerializer, ProfileSerializer
 
 
 class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
+    permission_classes = [IsAdminUser]
+
     serializer_class = UserSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['first_name', 'last_name']
@@ -41,7 +43,9 @@ class AvailibleUsers(generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        return User.objects.exclude(id=self.request.user.id)
+        current_org = self.request.user.organisation
+
+        return User.objects.filter(organisation=current_org).exclude(id=self.request.user.id)
 
 
 class ProfileView(APIView):

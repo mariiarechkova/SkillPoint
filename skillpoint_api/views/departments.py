@@ -1,3 +1,4 @@
+from rest_framework.permissions import IsAdminUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
@@ -6,6 +7,8 @@ from ..models import Department
 
 
 class DepartmentListCreate(APIView):
+    permission_classes = [IsAdminUser]
+
     def get(self, request, *args, **kwargs):
         departments = Department.objects.all()
         serializer = DepartmentSerializer(departments, many=True)
@@ -22,5 +25,7 @@ class DepartmentListCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DepartmentDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer

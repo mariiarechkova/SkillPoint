@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ..serializers import *
@@ -7,6 +8,8 @@ from ..serializers import *
 
 
 class VoteEventsView(APIView):
+    permission_classes = [IsAdminUser]
+
     def get_object(self, pk):
         return get_object_or_404(VoteEvent, pk=pk)
 
