@@ -84,7 +84,7 @@ class MetricsStaffView(APIView):
         users = User.objects.filter(organisation=self.request.user.organisation)
 
         for user in users:
-            average_rating = VoteDetails.objects.filter(
+            average_rating = VoteRoundDetails.objects.filter(
                 rated_user=user).aggregate(
                 average=Avg('estimation'))['average'] or 0
             user.average_rating = round(average_rating, 2)

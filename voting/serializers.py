@@ -4,7 +4,7 @@ from rest_framework import serializers
 from organisations.models import Organisation
 from organisations.serializers import DepartmentSerializer
 from users.models import User
-from voting.models import VoteEvent, VoteDetails
+from voting.models import VoteEvent, VoteRoundDetails
 
 
 class VoteEventSerializer(serializers.ModelSerializer):
@@ -18,7 +18,7 @@ class VoteEventSerializer(serializers.ModelSerializer):
 
 class VoteDetailsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = VoteDetails
+        model = VoteRoundDetails
         fields = '__all__'
 
 class MetricsStaffSerializer(serializers.ModelSerializer):
@@ -39,7 +39,7 @@ class MetricsVoteSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'evaluation_reports', 'total']
 
     def get_evaluation_reports(self, user):
-        vote_details = VoteDetails.objects.filter(rated_user=user).select_related('judge')
+        vote_details = VoteRoundDetails.objects.filter(rated_user=user).select_related('judge')
         return [
             {
                 'estimation': vote.estimation,
@@ -52,5 +52,5 @@ class MetricsVoteSerializer(serializers.ModelSerializer):
             for vote in vote_details
         ]
     def get_total(self,user):
-        vote_details = VoteDetails.objects.filter(rated_user=user)
+        vote_details = VoteRoundDetails.objects.filter(rated_user=user)
         return round(vote_details.aggregate(total=Sum('estimation'))['total'] or 0, 2)
