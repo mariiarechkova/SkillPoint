@@ -14,14 +14,28 @@ class VoteEvent(models.Model):
     frequency = models.CharField(max_length=10, choices=Frequency.choices, default=Frequency.MONTH)
     start_day = models.IntegerField(default=1, blank=True)
     end_day = models.IntegerField(default=15, blank=True)
-    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
+    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE, related_name='vote_events')
     created_at = models.DateTimeField(auto_now_add=True)
 
-class VoteDetails(models.Model):
-    estimation = models.FloatField()
+class VoteRound(models.Model):
+    vote_event = models.ForeignKey(VoteEvent, on_delete=models.CASCADE, related_name='vote_rounds')
+    stability = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    budget = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    start_at = models.DateTimeField()
+    end_at = models.DateTimeField()
+
+
+class VoteRoundDetails(models.Model):
+    estimation = models.DecimalField(max_digits=10, decimal_places=2)
     comment = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    vote_event = models.ForeignKey(VoteEvent, on_delete=models.CASCADE, related_name='vote_event')
-    rated_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rated_user')
-    judge = models.ForeignKey(User, on_delete=models.CASCADE, related_name='judge')
+    updated_at = models.DateTimeField(auto_now_add=True)
+    vote_round = models.ForeignKey(VoteRound, on_delete=models.CASCADE, related_name='vote_rounds')
+    rated_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='round_details')
+    judge = models.ForeignKey(User, on_delete=models.CASCADE, related_name='vote_round_details')
 
+class VoteRoundUserReport(models.Model):
+    vote_round = models.ForeignKey(VoteRound, on_delete=models.CASCADE, related_name='vote_round_reports')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='round_reports')
+    percent_bonus = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)

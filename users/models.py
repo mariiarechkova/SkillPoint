@@ -9,6 +9,11 @@ class User(AbstractUser):
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE, related_name='users')
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True, related_name='users')
     username = None
+    is_finish_sign_up = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    weight_vote = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    role = models.ManyToManyField('Role', related_name='users', blank=True)
+    is_approve_role = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
@@ -29,4 +34,28 @@ class Profile(models.Model):
     salary = models.CharField(max_length=20, null=True, blank=True)
     start_work_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class Role(models.Model):
+    title = models.CharField(max_length=255, unique=True)
+    weight_vote = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return self.title
+
+class Permission(models.Model):
+    title = models.CharField(max_length=255, unique=True)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='permissions')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+class Bonus(models.Model):
+    title = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bonuses')
+
+    def __str__(self):
+        return self.title
 
