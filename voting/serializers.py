@@ -14,7 +14,7 @@ class VoteEventSerializer(serializers.ModelSerializer):
     )
     class Meta:
         model = VoteEvent
-        fields = ['frequency', 'start_day', 'end_day', 'organisation']
+        fields = ['id','frequency', 'start_day', 'end_day', 'organisation']
 
 class VoteDetailsSerializer(serializers.ModelSerializer):
     class Meta:

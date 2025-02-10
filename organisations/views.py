@@ -2,7 +2,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
-from .serializers import (OrganisationSerializer, DepartmentSerializer)
+from .serializers import OrganisationSerializer, DepartmentSerializer
 from .models import Organisation, Department
 from users.models import User
 from users.serializers import UserSerializer
