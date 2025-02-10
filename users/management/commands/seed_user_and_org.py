@@ -27,12 +27,12 @@ class Command(BaseCommand):
         # Генерация рандомных данных для пользователя
         first_name = fake.first_name()
         last_name = fake.last_name()
-        email = f"admin{first_name.lower()}.{last_name.lower()}@test.com"
-        password = f"{first_name}{last_name}123"
+        email = f"{first_name.lower()}.{last_name.lower()}@test.com"
+        password = f"{first_name}123"
 
         user, user_created = User.objects.get_or_create(
             email=email,
-            defaults={'first_name': first_name, 'last_name': last_name, 'organisation': organisation}
+            defaults={'first_name': first_name, 'last_name': last_name, 'organisation': organisation, 'is_staff': True}
         )
 
         if user_created:
