@@ -1,6 +1,6 @@
+from decimal import Decimal
 from django.db.models import Sum
 from rest_framework import serializers
-
 from organisations.models import Organisation
 from organisations.serializers import DepartmentSerializer
 from users.models import User
@@ -16,7 +16,7 @@ class VoteEventSerializer(serializers.ModelSerializer):
         model = VoteEvent
         fields = ['id','frequency', 'start_day', 'end_day', 'organisation']
 
-class VoteDetailsSerializer(serializers.ModelSerializer):
+class VoteRoundDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = VoteRoundDetails
         fields = '__all__'

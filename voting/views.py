@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import *
+from .services.vote_rounds import create_vote_round
+
 
 class VoteEventsView(APIView):
     permission_classes = [IsAdminUser]
@@ -30,7 +32,8 @@ class VoteEventsView(APIView):
         serializer = VoteEventSerializer(data=user_data)
 
         if serializer.is_valid():
-            serializer.save()
+            vote_event = serializer.save()
+            create_vote_round(vote_event.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -59,7 +62,7 @@ class VoteEventsView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class VoteDetailsView(APIView):
+class VoteRoundDetailsView(APIView):
     def post(self, request, pk, format=None):
         current_user = self.request.user
         vote_details_data = request.data
@@ -67,9 +70,9 @@ class VoteDetailsView(APIView):
         if isinstance(vote_details_data, list):
             for detail in vote_details_data:
                 detail['judge'] = current_user.id
-                detail['vote_event'] = pk
+                detail['vote_round'] = pk
 
-            serializer = VoteDetailsSerializer(data=vote_details_data, many=True)
+            serializer = VoteRoundDetailsSerializer(data=vote_details_data, many=True)
 
             if serializer.is_valid():
                 serializer.save()
