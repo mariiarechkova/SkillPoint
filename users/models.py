@@ -11,17 +11,12 @@ class User(AbstractUser):
     username = None
     is_finish_sign_up = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    weight_vote = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    weight_vote = models.FloatField(null=True, blank=True)
     role = models.ManyToManyField('Role', related_name='users', blank=True)
     is_approve_role = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['email'], name='unique_email')
-        ]
 
     def __str__(self):
         return f'{self.first_name}, {self.last_name}'
@@ -37,7 +32,7 @@ class Profile(models.Model):
 
 class Role(models.Model):
     title = models.CharField(max_length=255, unique=True)
-    weight_vote = models.DecimalField(max_digits=10, decimal_places=2)
+    weight_vote = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
 
 

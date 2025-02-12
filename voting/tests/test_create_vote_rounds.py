@@ -1,7 +1,7 @@
 from django.test import TestCase
 from organisations.models import Organisation
 from voting.models import VoteEvent, VoteRound
-from voting.services.vote_rounds import create_vote_round
+from voting.services.vote_round_create_service import create_vote_round
 
 class VoteRoundServicesTest(TestCase):
     def setUp(self):

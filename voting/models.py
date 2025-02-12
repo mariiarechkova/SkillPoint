@@ -19,14 +19,14 @@ class VoteEvent(models.Model):
 
 class VoteRound(models.Model):
     vote_event = models.ForeignKey(VoteEvent, on_delete=models.CASCADE, related_name='vote_rounds')
-    stability = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    stability = models.FloatField(blank=True, null=True)
     budget = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     start_at = models.DateTimeField()
     end_at = models.DateTimeField()
 
 
 class VoteRoundDetails(models.Model):
-    estimation = models.DecimalField(max_digits=10, decimal_places=2)
+    estimation = models.FloatField()
     comment = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -37,5 +37,5 @@ class VoteRoundDetails(models.Model):
 class VoteRoundUserReport(models.Model):
     vote_round = models.ForeignKey(VoteRound, on_delete=models.CASCADE, related_name='vote_round_reports')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='round_reports')
-    percent_bonus = models.DecimalField(max_digits=10, decimal_places=2)
+    percent_bonus = models.DecimalField(max_digits=12, decimal_places=10)
     created_at = models.DateTimeField(auto_now_add=True)

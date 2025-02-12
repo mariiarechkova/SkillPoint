@@ -2,7 +2,7 @@ from django.db import models
 
 class Organisation(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    stability = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=1.5)
+    stability = models.FloatField(blank=True, default=1.5)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -21,4 +21,4 @@ class Department(models.Model):
 class DepartmentWeight(models.Model):
     judge_department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='judging_weights')
     rated_department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='rated_weights')
-    weight_vote = models.DecimalField(max_digits=10, decimal_places=2)
+    weight_vote = models.FloatField()

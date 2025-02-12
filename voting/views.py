@@ -1,11 +1,15 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.db.models import Avg
 from rest_framework import generics, status
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from users.serializers import UserSerializer
 from .serializers import *
-from .services.vote_rounds import create_vote_round
+from .services.validation_service import AvailableUsersService, ParticipantService
+from .services.vote_round_create_service import create_vote_round
 
 
 class VoteEventsView(APIView):
@@ -102,3 +106,17 @@ class MetricsVoteView(APIView):
         users = User.objects.filter(organisation=self.request.user.organisation)
         serializer = MetricsVoteSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class AvailableUsers(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        current_org = self.request.user.organisation
+        current_vote_event = get_object_or_404(VoteEvent, id = self.kwargs['pk'])
+        validation_service = AvailableUsersService(current_vote_event, self.request.user)
+        if not validation_service.is_eligible_user_vote():
+            raise PermissionDenied("You are not allowed to participate in voting.")
+
+        return ParticipantService.get_available_users_for_voting(current_org,self.request.user)
+
+

@@ -7,6 +7,6 @@ urlpatterns = [
     path('sign_up/', RegistrationView.as_view(), name='registration'),
     path('login/', LoginView.as_view(), name='login'),
     path('protected/', ProtectedView.as_view(), name='protected'),
-    path('available-to-vote/', AvailibleUsers.as_view(), name='available-to-vote'),
+
     path('profile/', ProfileView.as_view(), name='profile'),
 ]
