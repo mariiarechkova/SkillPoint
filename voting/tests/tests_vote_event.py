@@ -3,7 +3,7 @@ from rest_framework import status
 from django.urls import reverse
 from users.models import User
 from organisations.models import Organisation
-from .models import VoteEvent
+from voting.models import VoteEvent
 
 
 class VoteEventsViewTestCase(APITestCase):

@@ -103,18 +103,6 @@ class UserListTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data['error'], 'User not found')
 
-    def test_get_available_users(self):
-        self.url = reverse('available-to-vote')
-
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        user_ids = [user['id'] for user in response.data]
-        self.assertIn(self.user2.id, user_ids)
-        self.assertNotIn(self.user1.id, user_ids)  # Текущий пользователь не должен быть в списке
-        self.assertNotIn(self.other_user.id, user_ids) # Пользователь из другой организации не должен быть в списке
-
-
 class RegistrationViewTestCase(APITestCase):
 
     def setUp(self):

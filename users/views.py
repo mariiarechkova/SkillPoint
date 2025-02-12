@@ -44,16 +44,6 @@ class UserDetailView(APIView):
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=404)
 
-
-class AvailibleUsers(generics.ListAPIView):
-    serializer_class = UserSerializer
-
-    def get_queryset(self):
-        current_org = self.request.user.organisation
-
-        return User.objects.filter(organisation=current_org).exclude(id=self.request.user.id)
-
-
 class ProfileView(APIView):
 
     def get(self, request,  *args, **kwargs):
