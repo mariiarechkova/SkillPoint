@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from organisations.models import Organisation
-from users.models import User, Profile
+from users.models import User, Profile, Role
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -26,3 +26,14 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['image', 'job_title', 'description', 'salary', 'start_work_at']
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ['id', 'title', 'weight_vote']
+
+    def validate_weight_vote(self, value):
+        """check that the value is within acceptable limits."""
+        if not (1.0 <= value <= 10.0):
+            raise serializers.ValidationError("The score should be from 1.0 to 10.0")
+        return value

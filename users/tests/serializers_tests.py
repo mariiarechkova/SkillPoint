@@ -1,7 +1,7 @@
 from django.test import TestCase
-from users.models import User
+from users.models import User, Role
 from organisations.models import Organisation
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, RoleSerializer
 
 class UserSerializerTestCase(TestCase):
     def setUp(self):
@@ -55,3 +55,58 @@ class UserSerializerTestCase(TestCase):
         self.assertIsInstance(user, User)  # Проверяем, что объект создан
         self.assertNotEqual(user.password, 'securepassword123')  # Пароль должен быть хэширован
         self.assertTrue(user.check_password('securepassword123'))  # Проверяем, что пароль хэширован правильно
+
+class RoleSerializerTestCase(TestCase):
+    def test_serialization(self):
+        """check that the serializer correctly converts the Role object to JSON."""
+        role = Role.objects.create(title="Manager", weight_vote=5.0)
+        serializer = RoleSerializer(instance=role)
+        expected_data = {
+            "id": role.id,
+            "title": "Manager",
+            "weight_vote": 5.0,
+        }
+        self.assertEqual(serializer.data, expected_data)
+    def test_valid_weight_vote(self):
+        valid_data = {
+            'title': "manager",
+            'weight_vote': 7.5
+        }
+
+        serializer = RoleSerializer(data = valid_data)
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+
+    def test_invalid_weight_vote_high(self):
+        invalid_data = {
+            'title': "manager",
+            'weight_vote': 15.0
+        }
+
+        serializer = RoleSerializer(data = invalid_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("weight_vote", serializer.errors)
+        self.assertEqual(serializer.errors["weight_vote"][0], 'The score should be from 1.0 to 10.0')
+
+    def test_invalid_weight_vote_low(self):
+        invalid_data = {
+            'title': "manager",
+            'weight_vote': 0.5
+        }
+
+        serializer = RoleSerializer(data = invalid_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("weight_vote", serializer.errors)
+        self.assertEqual(serializer.errors["weight_vote"][0], 'The score should be from 1.0 to 10.0')
+
+    def test_serializer_created_role(self):
+        """We check that the serializer validates and creates the object correctly."""
+        valid_data = {
+            "title": "Manager",
+            "weight_vote": 7.0,
+        }
+        serializer = RoleSerializer(data=valid_data)
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+
+        role = serializer.save()
+        self.assertEqual(role.title, "Manager")
+        self.assertEqual(role.weight_vote, 7.0)
