@@ -40,7 +40,7 @@ class UserSerializerTestCase(TestCase):
         self.assertIn('password', serializer.errors)  # Ошибка должна быть связана с паролем
 
     def test_user_creation(self):
-        """ Проверяем, что пользователь создается через сериализатор и пароль хэшируется """
+        """ We check that the user is created through the serializer and the password is hashed. """
         valid_data = {
             'first_name': 'Alice',
             'last_name': 'Smith',
@@ -52,9 +52,9 @@ class UserSerializerTestCase(TestCase):
         self.assertTrue(serializer.is_valid())
 
         user = serializer.save()
-        self.assertIsInstance(user, User)  # Проверяем, что объект создан
-        self.assertNotEqual(user.password, 'securepassword123')  # Пароль должен быть хэширован
-        self.assertTrue(user.check_password('securepassword123'))  # Проверяем, что пароль хэширован правильно
+        self.assertIsInstance(user, User)  # Checking that the object has been created
+        self.assertNotEqual(user.password, 'securepassword123')
+        self.assertTrue(user.check_password('securepassword123'))  # check that the password is hashed correctly
 
 class RoleSerializerTestCase(TestCase):
     def test_serialization(self):
