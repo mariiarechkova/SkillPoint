@@ -24,7 +24,6 @@ class VoteRound(models.Model):
     start_at = models.DateTimeField()
     end_at = models.DateTimeField()
 
-
 class VoteRoundDetails(models.Model):
     estimation = models.FloatField()
     comment = models.TextField(null=True, blank=True)

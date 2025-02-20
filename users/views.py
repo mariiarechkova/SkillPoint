@@ -1,10 +1,10 @@
-from rest_framework import generics, filters
+from rest_framework import generics, filters, viewsets
 from rest_framework.permissions import IsAdminUser
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Profile, User
-from .serializers import UserSerializer, ProfileSerializer
+from .models import Profile, User, Role
+from .serializers import UserSerializer, ProfileSerializer, RoleSerializer
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import AllowAny
@@ -106,3 +106,8 @@ class LoginView(APIView):
 class ProtectedView(APIView):
     def get(self, request):
         return Response({"message": "You are authenticated", "user": str(request.user)})
+
+class RoleViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminUser]
+    queryset = Role.objects.all()
+    serializer_class = RoleSerializer
