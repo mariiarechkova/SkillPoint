@@ -15,16 +15,18 @@ class DepartmentWeightEstimationService:
             rated_dept = item["rated_department"]
             weight_dict[(judge_dept, rated_dept)] = item["weight_vote"] / 10
 
+        def get_user_data(user):
+            """function for extracting user data."""
+            return user["id"], user["department"]
+
         result = {}
 
         for item in self.users:
-            rated_user = item['id']
-            user_dept = item['department']
+            rated_user, user_dept = get_user_data(item)
             result[rated_user] = {}
 
             for other_user in self.users:
-                other_user_id = other_user["id"]
-                other_dept = other_user['department']
+                other_user_id, other_dept = get_user_data(other_user)
 
                 if rated_user == other_user_id:
                     weight = 1
@@ -32,6 +34,7 @@ class DepartmentWeightEstimationService:
                     weight = weight_dict.get((user_dept,other_dept), 1)
 
                 result[rated_user][other_user_id] = weight
+
         return result
 
     def get_common_weight(self):
