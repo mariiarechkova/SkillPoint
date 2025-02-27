@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from organisations.models import Organisation, Department, DepartmentWeight
-from users.models import User
+from users.models import User, Profile
 from voting.models import VoteEvent, VoteRound, VoteRoundDetails
 
 class BaseTestCase(TestCase):
@@ -50,6 +50,13 @@ class BaseTestCase(TestCase):
             )
             setattr(cls, f"user{i}", user)
             cls.users.append(user)
+
+        Profile.objects.create(user=cls.user1, salary=450)
+        Profile.objects.create(user=cls.user2, salary=580)
+        Profile.objects.create(user=cls.user3, salary=450)
+        Profile.objects.create(user=cls.user4, salary=480)
+        Profile.objects.create(user=cls.user5, salary=600)
+        Profile.objects.create(user=cls.user6, salary=500)
 
         estimations = {
             cls.user1.id: [6, 5, 5, 6],
